@@ -22,6 +22,9 @@ const routes = [
   {
     path: '/admin',
     name: 'admin',
+    meta: {
+      title: '后台管理'
+    },
     component: () => import('@/components/layout/admin/index.vue'),
     children: [
       {

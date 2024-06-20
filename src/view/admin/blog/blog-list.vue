@@ -38,7 +38,7 @@
     </template>
     <template #expandedRowRender="{ record }">
       <a-card :bordered="false" style="text-indent: 2em;letter-spacing:2px;line-height: 30px;color: grey">
-        <div>{{ record.description }}qweqweqwewqeqweqweqwewqeqweqweqweqweqweqweqwsadfs手动阀手动阀手动阀撒旦撒旦请问大师反对佛挡杀佛即可获得爱上凤凰的萨芬打开回复健康大使即可收到回复喀什雕刻技法的健康eqweqweqw</div>
+        <div>{{ record.description }}</div>
       </a-card>
     </template>
   </a-table>
@@ -111,7 +111,11 @@ const data = reactive({
           setTimeout(() => {
             searchInput.value.focus()
           }, 0)
-        }
+        } 
+      },
+      customRender({text, record}) {
+        let to = {name: 'admin-blog-artical-detail', params: {id: record.id}}
+        return <router-link target='_blank' to={to}>{text}</router-link>
       },
     }, 
     {

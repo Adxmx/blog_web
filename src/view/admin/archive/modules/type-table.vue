@@ -2,7 +2,7 @@
   <a-table :columns="data.columns" :data-source="data.types" :row-key="(record) => record.id" size="small" bordered style="margin-top: 10px;" :pagination="data.pagination" @change="methods.handleTableChange" :loading="data.loading" >
     <template #headerCell="{ column }">
       <template v-if="column.dataIndex === 'id'">
-        <a-button class="add" size="small" type="primary" shape="circle" ghost @click.stop="typeFormRef.data.open = true"><plus-outlined /></a-button>ID
+        <a-button class="add" size="small" type="primary" shape="circle" ghost @click.stop="methods.addType()"><plus-outlined /></a-button>ID
       </template>
     </template>
 
@@ -50,7 +50,7 @@
 <script setup>
 import typeForm from '@/view/admin/archive/modules/type-form.vue'
 
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, defineExpose } from 'vue'
 import { useStore } from 'vuex'
 
 import { cloneDeep } from 'lodash-es'
@@ -223,7 +223,12 @@ onMounted(
     methods.getTypeList()
   }
 )
+
+defineExpose({
+  methods
+})
 </script>
+
 <style scoped>
 .add {
   z-index: auto;

@@ -14,8 +14,11 @@ import 'prismjs/themes/prism-twilight.min.css'
 import Prism from 'prismjs/prism.js'
 
 import { reactive, onMounted } from 'vue'
+import { useRouter} from 'vue-router'
 
 import { getBlogDetailByIdAPI } from '@/api/admin/blog.js'
+
+const router = useRouter()
 
 const data = reactive({
   // 博客字段
@@ -32,7 +35,8 @@ const methods = {
 
 onMounted(
   () => {
-    methods.getBlogDetailById(1)
+    let id = router.currentRoute.value.params.id
+    methods.getBlogDetailById(id)
     setTimeout(() => {
       Prism.highlightAll()
     }, 100)
