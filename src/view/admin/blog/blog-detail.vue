@@ -2,18 +2,17 @@
   <a-card class="artical">
     <a-typography-title :level="2" class="title">{{ data.blogForm.title }}</a-typography-title>
     <a-divider />
-    <pre style="text-align: start;" class="language-java" language="java" tabindex="0"><code class="language-python" language="java"  style="line-height: 1;">p { color: red }</code></pre>
-    <p id="wrapper" class="typo typo-selection" v-html="data.blogForm.content"></p>
+    <p class="content" v-html="data.blogContent"></p>
+    <h1></h1>
   </a-card>
   <a-back-top />
 </template>
 <script setup>
-import 'typo.css/typo.css'
+import { marked } from 'marked'
+import "highlight.js/styles/dark.min.css"
+import hljs from "highlight.js"
 
-import 'prismjs/themes/prism-twilight.min.css'
-import Prism from 'prismjs/prism.js'
-
-import { reactive, onMounted } from 'vue'
+import { reactive, onMounted, nextTick } from 'vue'
 import { useRouter} from 'vue-router'
 
 import { getBlogDetailByIdAPI } from '@/api/admin/blog.js'
@@ -22,13 +21,20 @@ const router = useRouter()
 
 const data = reactive({
   // 博客字段
-  blogForm: {}
+  blogForm: {},
+  blogContent: ""
 })
 
 const methods = {
   getBlogDetailById: (id) => {
     getBlogDetailByIdAPI(id).then(response => {
       Object.assign(data.blogForm, response.data.blog)
+      if (data.blogForm.editor === 2) {
+        data.blogContent = marked.parse(data.blogForm.content)
+      }
+      nextTick(() => {
+        hljs.highlightAll()
+      })
     })
   }
 }
@@ -37,9 +43,6 @@ onMounted(
   () => {
     let id = router.currentRoute.value.params.id
     methods.getBlogDetailById(id)
-    setTimeout(() => {
-      Prism.highlightAll()
-    }, 100)
   }
 )
 </script>
@@ -51,5 +54,13 @@ onMounted(
 .artical .title {
   text-align: center;
   border-radius: 5px;
+}
+
+.artical .content h1 {
+  margin-bottom: 0.5em;
+  color: rgba(0, 0, 0, 0.88);
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 1.2666666666666666;
 }
 </style>
