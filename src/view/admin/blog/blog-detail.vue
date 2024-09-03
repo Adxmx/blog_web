@@ -29,7 +29,9 @@ const methods = {
   getBlogDetailById: (id) => {
     getBlogDetailByIdAPI(id).then(response => {
       Object.assign(data.blogForm, response.data.blog)
-      if (data.blogForm.editor === 2) {
+      if (data.blogForm.editor === 1) {
+        data.blogContent = data.blogForm.content
+      } else if (data.blogForm.editor === 2) {
         data.blogContent = marked.parse(data.blogForm.content)
       }
       nextTick(() => {
