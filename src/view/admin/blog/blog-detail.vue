@@ -3,7 +3,6 @@
     <a-typography-title :level="2" class="title">{{ data.blogForm.title }}</a-typography-title>
     <a-divider />
     <p class="content" v-html="data.blogContent"></p>
-    <h1></h1>
   </a-card>
   <a-back-top />
 </template>
@@ -25,7 +24,7 @@ const data = reactive({
   blogContent: ""
 })
 
-const methods = {
+const methods = reactive({
   getBlogDetailById: (id) => {
     getBlogDetailByIdAPI(id).then(response => {
       Object.assign(data.blogForm, response.data.blog)
@@ -39,7 +38,7 @@ const methods = {
       })
     })
   }
-}
+})
 
 onMounted(
   () => {
@@ -48,7 +47,7 @@ onMounted(
   }
 )
 </script>
-<style>
+<style scoped>
 .artical {
   width: 100%;
 }

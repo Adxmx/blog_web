@@ -18,23 +18,30 @@ export const filenameGenerator = (file) => {
 // git文件上传请求
 export const fileUploadToGitRepo = (file, callback) => {
     let filename = filenameGenerator(file)
-    let currentDay = dayjs().format('YYYY-MM-DD')
+    let currentDay = dayjs().format('YYYY-MM')
     let reader = new FileReader()
     reader.onload = (e) => {
-        console.log(e.target)
-
-        let url = `${process.env.VUE_APP_GITHUB_IMAGE_REPO}/${process.env.VUE_APP_GITHUB_IMAGE_PROJ}/${currentDay}/${filename}`
+        let url = `${process.env.VUE_APP_GITEE_IMAGE_REPO}/${process.env.VUE_APP_GIT_IMAGE_PROJ}/${currentDay}/${filename}`
         let headers = {
             "Content-Type": "application/json", 
-            "Authorization": process.env.VUE_APP_GITHUB_IMAGE_TOKEN
+            "Authorization": process.env.VUE_APP_GITEE_IMAGE_TOKEN
         }
         let data = {
             "message": "上传图片!", 
             "content": e.target.result.split(',')[1]
         }
-        axios({url: url, method: 'PUT', data: data, headers: headers}).then(response => {
+        // GITEE上传使用POST方法，GITHUB上传使用PUT方法
+        axios({url: url, method: 'POST', data: data, headers: headers}).then(response => {
             callback(response.data.content.download_url)
         })
     }
     reader.readAsDataURL(file)
+}
+
+// 时间格式化
+export const dateTimeFormat = (time) => {
+    return dayjs(time).format('YYYY-MM-DD HH:mm:ss')
+}
+export const dateFormat = (time) => {
+    return dayjs(time).format('YYYY-MM-DD')
 }

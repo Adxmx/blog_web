@@ -42,9 +42,9 @@
       </a-form-item>
 
       <a-form-item label="封 面">
-        <a-upload class="avatar-uploader" list-type="picture-card" :show-upload-list="false" :before-upload="methods.beforeUpload" :customRequest="methods.customUpload">
-          <img v-if="data.blogSettingsForm.cover" style="width: 100%;" :src="data.blogSettingsForm.cover" alt="avatar" />
-          <div v-else>
+        <a-upload class="cover-upload" list-type="picture-card" :show-upload-list="false" :before-upload="methods.beforeUpload" :customRequest="methods.customUpload">
+          <img v-if="data.blogSettingsForm.cover" style="width: 100%;" :src="data.blogSettingsForm.cover" alt="cover" />
+          <div class="upload-desc" v-else>
             <loading-outlined v-if="data.upload.loading"></loading-outlined>
             <plus-outlined v-else></plus-outlined>
             <div class="ant-upload-text">封 面 图 片</div>
@@ -156,14 +156,19 @@ onMounted(
 </script>
 
 <style>
-.avatar-uploader > .ant-upload {
-  width: 100%;
-  height: 200px;
-  overflow: auto;
+.cover-upload  .ant-upload-select-picture-card {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 160px;
 }
-.ant-upload-select-picture-card i {
-  font-size: 32px;
-  color: #999;
+
+.cover-upload img {
+  width: 100%;
+  line-height: 160px;;
+}
+
+.cover-upload .upload-desc{
+  margin: 60px;
 }
 
 .ant-upload-select-picture-card .ant-upload-text {

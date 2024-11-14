@@ -1,3 +1,5 @@
+import qs from 'qs'
+
 import { message } from 'ant-design-vue'
 
 import axios from 'axios'
@@ -8,7 +10,10 @@ import store from '@/store/index.js'
 // 创建axios实例
 const service = axios.create({
   baseURL: process.env.VUE_APP_BLOG_SERVER_API,
-  timeout: 6000
+  timeout: 6000,
+  paramsSerializer: {
+    serialize: params => qs.stringify(params, { arrayFormat: 'repeat' })
+  }
 })
 
 // 请求拦截器

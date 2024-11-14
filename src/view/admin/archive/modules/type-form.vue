@@ -1,5 +1,6 @@
 <template>
   <a-modal v-model:open="data.open" title="新 增" size="small" @ok="methods.handleOk">
+    <a-divider />
     <a-form :model="data.typeForm" name="basic" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
     <a-form-item label="分 类 名" name="label" :rules="[{ required: true, message: '请输入分类名字！' }]">
       <a-input v-model:value="data.typeForm.label" placeholder="请 输 入 分 类 名 字 " />

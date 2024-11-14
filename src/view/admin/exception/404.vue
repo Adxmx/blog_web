@@ -11,6 +11,6 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const toHome = () => {
-  router.push({ name: '404' })
+  router.push({ name: 'admin-404' })
 }
 </script>

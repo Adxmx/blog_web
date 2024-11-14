@@ -3,6 +3,3 @@
     <router-view></router-view>
   </a-layout-content>
 </template>
-
-<script setup>
-</script>

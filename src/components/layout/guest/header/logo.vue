@@ -1,9 +1,17 @@
 <template>
   <div class="logo">
-    <div class="img">B L O G</div>
-    <span class="title">后台管理</span>
+    <div class="img">{{ props.logo }}</div>
+    <span class="title">{{ props.title }}</span>
   </div>
 </template>
+
+<script setup>
+import { defineProps } from 'vue'
+const props = defineProps({
+  logo: String,
+  title: String
+})
+</script>
 
 <style scoped>
 .logo {

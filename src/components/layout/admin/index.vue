@@ -4,7 +4,7 @@
       <!-- logo组件 -->
       <logo />
       <!-- 用户组件 -->
-      <func class="func" />
+      <func />
     </a-layout-header>
     <a-layout>
       <a-layout-sider width="200" style="background: #fff">
@@ -26,16 +26,13 @@ import Logo from '@/components/layout/admin/header/logo.vue'
 import Func from '@/components/layout/admin/header/func.vue'
 import Navigation from '@/components/layout/admin/sider/navigation.vue'
 import Breadcrumb from '@/components/layout/admin/content/breadcrumb.vue'
-import AppMain from '@/components/layout/admin/content/app-main'
+import AppMain from '@/components/layout/admin/content/app-main.vue'
 </script>
 
 <style scoped>
 .header {
   background: #fff;
-}
-
-.func {
-  float: right;
-  padding: 0 10px;
+  z-index: 1;
+  box-shadow: 5px 0 5px #0000001a;
 }
 </style>

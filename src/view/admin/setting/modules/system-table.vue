@@ -1,11 +1,11 @@
 <template>
-  <a-table :columns="data.columns" :data-source="data.types" :row-key="(record) => record.id" size="small" bordered style="margin-top: 10px;" :pagination="data.pagination" @change="methods.handleTableChange" :loading="data.loading">
+  <a-table :columns="data.columns" :data-source="data.confs" :row-key="(record) => record.id" size="small" bordered :pagination="data.pagination" @change="methods.handleTableChange" :loading="data.loading">
     <template #headerCell="{ column }">
       <template v-if="column.dataIndex === 'id'">
-        <a-button class="add" size="small" type="primary" shape="circle" ghost @click.stop="methods.addType()"><plus-outlined /></a-button>ID
+        <a-button class="add" size="small" type="primary" shape="circle" ghost @click.stop="methods.showModal()"><plus-outlined /></a-button>ID
       </template>
     </template>
-
+    
     <template #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }">
       <div style="padding: 8px">
         <a-input ref="searchInput" :placeholder="`搜索 ${column.title}`" :value="selectedKeys[0]" style="width: 188px; margin-bottom: 8px; display: block" @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])" @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)" />
@@ -15,27 +15,12 @@
         <a-button size="small" style="width: 90px" @click="methods.handleReset(clearFilters)">重置</a-button>
       </div>
     </template>
-    <template #customFilterIcon="{ filtered }">
-      <search-outlined :style="{ color: filtered ? '#108ee9' : undefined }" />
-    </template>
-
-    <template #bodyCell="{ column, text, record }">
-      <!-- 控制可编辑列 -->
-      <template v-if="['label'].includes(column.dataIndex)">
-        <div>
-          <a-input v-if="data.editableData[record.id]" v-model:value="data.editableData[record.id][column.dataIndex]" style="margin: -5px 0" />
-          <template v-else>{{ text }}</template>
-        </div>
-      </template>
-      <template v-else-if="column.dataIndex === 'operation'">
+    <template #bodyCell="{ column, record }">
+      <template v-if="column.dataIndex === 'operation'">
         <div class="editable-row-operations">
-          <span v-if="data.editableData[record.id]">
-            <a-typography-link @click="methods.save(record.id)">保 存</a-typography-link>
-            <a-popconfirm title="是 否 确 定 取 消?" @confirm="methods.cancel(record.id)"><a>取 消</a></a-popconfirm>
-          </span>
-          <span v-else>
-            <a @click="methods.edit(record.id)">编 辑</a>
-            <a-popconfirm title="确定删除此分类吗？" @confirm="methods.deleteTypeById(record.id)">
+          <span>
+            <a @click="methods.showModal(record.id)">编 辑</a>
+            <a-popconfirm title="确定删除此分类吗？" @confirm="methods.deleteConfById(record.id)">
               <template #icon><question-circle-outlined style="color: red" /></template>
               <a style="color: red">删 除</a>
             </a-popconfirm>
@@ -44,31 +29,26 @@
       </template>
     </template>
   </a-table>
-  <type-form ref="typeFormRef" @flush="methods.getTypeList" />
+  <system-form ref="systemFormRef" @flush="methods.getConfList"/>
 </template>
 
 <script setup>
-import typeForm from '@/view/admin/archive/modules/type-form.vue'
+import systemForm from '@/view/admin/setting/modules/system-form.vue'
 
-import { ref, reactive, onMounted, defineExpose } from 'vue'
-import { useStore } from 'vuex'
+import { ref, reactive, onMounted } from 'vue';
 
-import { cloneDeep } from 'lodash-es'
 import dayjs from 'dayjs'
 
-import { getTypeListAPI, deleteTypeByIdAPI, updateTypeByIdAPI } from '@/api/admin/archive.js'
-
-const store = useStore()
+import { getConfListAPI, deleteConfByIdAPI } from '@/api/admin/setting.js'
 
 const searchInput = ref()
-const typeFormRef = ref()
+const systemFormRef = ref()
 
 const data = reactive({
   state: {
     searchText: '',
     searchedColumn: ''
   },
-  editableData: {},
   pagination: {
     showTotal: (total) => `共 ${total} 条数据`,
     showSizeChanger: true,
@@ -87,14 +67,14 @@ const data = reactive({
       title: 'ID',
       dataIndex: 'id',
       align: 'center',
-      width: '15%',
+      width: '10%',
       sorter: true
     }, 
     {
-      title: '分类',
-      dataIndex: 'label',
+      title: '名称',
+      dataIndex: 'name',
       align: 'center',
-      width: '30%',
+      width: '20%',
       customFilterDropdown: true,
       onFilterDropdownOpenChange: (visible) => {
         if (visible) {
@@ -103,7 +83,21 @@ const data = reactive({
           }, 0)
         }
       },
-    }, 
+    },
+    {
+      title: '编码',
+      dataIndex: 'code',
+      align: 'center',
+      width: '20%',
+      customFilterDropdown: true,
+      onFilterDropdownOpenChange: (visible) => {
+        if (visible) {
+          setTimeout(() => {
+            searchInput.value.focus()
+          }, 0)
+        }
+      },
+    },
     {
       title: '更新日期',
       dataIndex: 'modifiedTime',
@@ -118,7 +112,7 @@ const data = reactive({
       title: '处理人',
       dataIndex: ['user', 'nickname'],
       align: 'center',
-      width: '20%',
+      width: '15%',
       customFilterDropdown: true,
       onFilter: (value, record) => {
         record.user.nickname.toString().toLowerCase().includes(value.toLowerCase())
@@ -137,7 +131,7 @@ const data = reactive({
       align: 'center',
     }
   ],
-  types: []
+  confs: []
 })
 
 const methods = {
@@ -163,7 +157,7 @@ const methods = {
 
     // 将表格中局部查询条件保存到全局变量中
     data.queryCustom = {...filterDic, ...sorterDic}
-    methods.getTypeList()
+    methods.getConfList()
   },
   handleSearch: (selectedKeys, confirm, dataIndex) => {
     confirm()
@@ -174,59 +168,33 @@ const methods = {
     clearFilters({ confirm: true })
     data.state.searchText = ''
   },
-  edit: (id) => {
-    data.editableData[id] = cloneDeep(data.types.filter(item => id === item.id)[0])
-  },
-  save: (id) => {
-    // 后台检验更新修改后的数据
-    methods.updateTypeById(id, {id: id, label: data.editableData[id]['label']})
-  },
-  cancel: (id) => {
-    delete data.editableData[id]
-  },
-  getTypeList: () => {
-    getTypeListAPI({current: data.pagination.current, pageSize: data.pagination.pageSize,  ...data.queryCustom}).then(response => {
-      data.types = response.data.types
+  getConfList: () => {
+    getConfListAPI({current: data.pagination.current, pageSize: data.pagination.pageSize,  ...data.queryCustom}).then(response => {
+      data.confs = response.data.confs
       data.pagination.total = response.data.total
       data.loading = false
     }, error => {
       console.log(error)
     })
   },
-  updateTypeById: (id, type) => {
-    updateTypeByIdAPI(id, type).then(() => {
-      // 将表格中的处理人改为当前用户
-      data.editableData[id].user.nickname = store.state.user.nickname
-      // 更新表格数据
-      Object.assign(data.types.filter(item => id === item.id)[0], data.editableData[id])
-      // 删除编辑数据
-      delete data.editableData[id]
-    }, error => {
-      console.log(error)
-    })
-  },
-  deleteTypeById: (id) => {
-    deleteTypeByIdAPI(id).then(response => {
+  deleteConfById: (id) => {
+    deleteConfByIdAPI(id).then(response => {
       console.log(response)
-      methods.getTypeList()
+      methods.getConfList()
     }, error => {
       console.log(error)
     })
   },
-  addType: () => {
-    typeFormRef.value.data.open = true
+  showModal: (id) => {
+    systemFormRef.value.methods.showModal(id)
   }
 }
 
 onMounted(
   () => {
-    methods.getTypeList()
+    methods.getConfList()
   }
 )
-
-defineExpose({
-  methods
-})
 </script>
 
 <style scoped>

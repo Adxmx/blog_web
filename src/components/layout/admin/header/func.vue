@@ -52,6 +52,11 @@ const methods = reactive({
 </script>
 
 <style scoped>
+.func {
+  float: right;
+  padding: 0 10px;
+}
+
 .func .horizontal {
   margin: 0 15px 0 15px;
 }

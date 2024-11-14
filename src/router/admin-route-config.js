@@ -9,9 +9,9 @@
  *  若一级导航栏存在groups，则二级导航栏的中的group的值须为groups中的某一个key
  *  若一级导航栏不存在groups，二级导航栏group无需配置
  */
-const routes = [
+const adminRoutes = [
   {
-    path: '/login',
+    path: '/admin/login',
     name: 'admin-login',
     meta: {
       title: '登 录'
@@ -26,6 +26,7 @@ const routes = [
       title: '后台管理'
     },
     component: () => import('@/components/layout/admin/index.vue'),
+    redirect: { name: 'admin-dashboard' },
     children: [
       {
         path: 'dashboard',
@@ -91,8 +92,42 @@ const routes = [
         ]
       },
       {
+        path: 'setting',
+        name: 'admin-setting',
+        meta: {
+          title: '系统设置',
+          icon:'desktop-outlined',
+          groups: [
+            {"key": "system", "title": "网 站"},
+            {"key": "user", "title": "个 人"},
+          ]
+        },
+        children: [
+          {
+            path: 'system',
+            name: 'admin-setting-system',
+            meta: {
+              title: '网站设置',
+              icon: 'read-outlined',
+              group: 'system'
+            },
+            component: () => import('@/view/admin/setting/system.vue')
+          },
+          {
+            path: 'user',
+            name: 'admin-setting-user',
+            meta: {
+              title: '个人设置',
+              icon: 'read-outlined',
+              group: 'user'
+            },
+            component: () => import('@/view/admin/blog/blog-list.vue')
+          },
+        ]
+      },
+      {
         path: ':pathMatch(.*)',
-        name: '404',
+        name: 'admin-404',
         meta:{
           title: '4 0 4'
         },
@@ -105,4 +140,4 @@ const routes = [
 
 
 
-export default routes
+export default adminRoutes

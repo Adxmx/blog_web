@@ -1,7 +1,7 @@
 <template>
   <a-menu mode="inline" @select="methods.selectMenuItem" v-model:openKeys="data.openKeys" v-model:selectedKeys="data.selectedKeys">
     <!-- 导航栏生成逻辑(注意此处传参来自routes，而非data.routes，使用data.routes会造成重复递归，原因不明) -->
-    <template v-for="menu in methods.filterRouter(routes[1]['children'])">
+    <template v-for="menu in methods.filterRouter(adminRoutes[1]['children'])">
       <!-- 二级导航栏，多用于业务路由 -->
       <template v-if="menu.children">
         <a-sub-menu :key="menu.name">
@@ -34,7 +34,7 @@
 import { reactive, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
-import routes from '@/router/admin-route-config.js'
+import adminRoutes from '@/router/admin-route-config.js'
 
 const router = useRouter()
 
@@ -44,7 +44,7 @@ const data = reactive({
   // 二级导航选中的节点
   selectedKeys: [],
   // 路由列表
-  routes: routes[1]['children']
+  routes: adminRoutes[1]['children']
 })
 
 const methods = reactive({
