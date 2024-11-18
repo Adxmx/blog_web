@@ -2,7 +2,7 @@
   <div class="item" v-for="blogItem in props.blogItems" :key="blogItem.id">
     <img-action class="box" :width="'96px'" :height="'68px'" :action="true" :dimension="'height'" :url="blogItem.cover" />
     <div class="desc">
-      <router-link target='_blank' :to="{name: 'guest-blog', params: {id: blogItem.id}}"><h3>{{ blogItem.title }}</h3></router-link>
+      <router-link target='_blank' :to="{name: 'guest-blog', params: {id: blogItem.id}}"><h2>{{ blogItem.title }}</h2></router-link>
       <p><span class="field">发布日期</span> <span class="attach">{{ dateFormat(blogItem.createdTime) }}</span></p>
     </div>
   </div>
@@ -35,7 +35,7 @@ const props = defineProps({
   margin-left: 8px;
 }
 
-.item .desc h3 {
+.item .desc h2 {
   height: 44px;
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -64,7 +64,7 @@ const props = defineProps({
   background: #E9EAED;
 }
 
-.item:hover h3 {
+.item:hover h2 {
   font-weight: bold;
 }
 </style>

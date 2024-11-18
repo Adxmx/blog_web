@@ -32,9 +32,12 @@ const props = defineProps({
   max-width: 100%;
 }
 
+.mask .action {
+  transition: transform 0.8s ease-in-out;
+}
+
 .mask .action:hover {
   transform: scale(1.2);
-  transition: 2s;
 }
 
 </style>

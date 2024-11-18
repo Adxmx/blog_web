@@ -38,7 +38,7 @@
       </a-form-item>
 
       <a-form-item label="描 述">
-        <a-textarea v-model:value="data.blogSettingsForm.description" :rows="5" placeholder="请 输 入 文 章 描 述 . . ." show-count :maxlength="100" />
+        <a-textarea v-model:value="data.blogSettingsForm.description" :rows="5" placeholder="请 输 入 文 章 描 述 . . ." show-count :maxlength="1024" />
       </a-form-item>
 
       <a-form-item label="封 面">

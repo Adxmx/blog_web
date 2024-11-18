@@ -1,8 +1,8 @@
 <template>
   <a-card class="author">
-    <img :src="props.user.avatar" />
-    <h3>{{ props.user.nickname }}</h3>
-    <p>欢迎来到我的主页</p>
+    <img :src="props.user?.avatar" />
+    <h3>{{ props.user?.nickname }}</h3>
+    <p>{{ props.user?.signature }}</p>
     <a-divider class="divider" />
     <a-row class="visit">
       <a-col :span="8">
@@ -51,6 +51,11 @@ const props = defineProps({
 .author img {
   width: 64px;
   border-radius: 50%;
+  transition: transform 1s ease-in-out;;
+}
+
+.author img:hover {
+  transform: rotate(360deg);
 }
 
 .author h3 {

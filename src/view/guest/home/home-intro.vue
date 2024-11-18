@@ -3,18 +3,14 @@
     <a-col :span="12">
       <a-carousel class="carousel">
         <div v-for="carousel in data.config.carousels" :key="carousel.id">
-          <router-link target='_blank' :to="{name: 'guest-blog', params: {id: carousel.id}}"><h1 :style="`background-image: url(${carousel.cover});`">{{ carousel.title }}</h1></router-link>
+          <dom-background :cover="carousel.cover" :title="carousel.title" :id="carousel.id" size="24px" spacing="5px" />
         </div>
       </a-carousel>
     </a-col>
     <a-col :span="6" class="push">
-      <div class="article" :style="`background-image: url(${data.config.topFirst?.cover})`">
-        <router-link v-if="data.config.topFirst?.id" target='_blank' :to="{name: 'guest-blog', params: {id: data.config.topFirst?.id}}"><h3>{{data.config.topFirst?.title}}</h3></router-link>
-      </div>
+      <dom-background v-if="data.config.topFirst" :cover="data.config.topFirst?.cover" :title="data.config.topFirst?.title" :id="data.config.topFirst?.id" height="130px" size="16px" spacing="4px" />
       <div class="interval"></div>
-      <div class="article" :style="`background-image: url(${data.config.topSecond?.cover})`">
-        <router-link v-if="data.config.topSecond?.id" target='_blank' :to="{name: 'guest-blog', params: {id: data.config.topSecond?.id}}"><h3>{{data.config.topSecond?.title}}</h3></router-link>
-      </div>
+      <dom-background v-if="data.config.topSecond" :cover="data.config.topSecond?.cover" :title="data.config.topSecond?.title" :id="data.config.topSecond?.id" height="130px" size="16px" spacing="4px" />
     </a-col>
     <a-col :span="6">
       <a-card title="分类标签">
@@ -25,6 +21,7 @@
 </template>
 
 <script setup>
+import DomBackground from '@/components/modules/dom-background.vue'
 import Tag from '@/components/modules/tag.vue'
 
 import { reactive, onMounted } from 'vue'
@@ -60,37 +57,7 @@ onMounted(
 
 <style scoped>
 .carousel div {
-  text-align: center;
   height: 270px;
-  line-height: 270px;
-  overflow: hidden;
-}
-
-.carousel h1 {
-  cursor: pointer;
-  background-size: cover;
-  background-position: center center;
-  color: #fff;
-  font-weight: bold;
-  font-size: 24px;
-  letter-spacing: 5px;
-}
-
-.push .article {
-  text-align: center;
-  height: 130px;
-  line-height: 130px;
-  overflow: hidden;
-  cursor: pointer;
-  background-size: cover;
-  background-position: center center;
-}
-
-.push .article h3 {
-  color: #fff;
-  font-weight: bold;
-  font-size: 16px;
-  letter-spacing: 4px;
 }
 
 .push .interval {

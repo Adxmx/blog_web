@@ -1,10 +1,10 @@
 <template>
   <a-row :gutter="16">
     <a-col :span="18">
-      <blog-article :blog="data.blog" :author="data.user.nickname" :label="data.type.label" />
+      <blog-article :blog="data.blog" />
     </a-col>
     <a-col :span="6"> 
-      <blog-author :user="data.user" :view="data.blog.view" :thumb="data.blog.thumb" :blogItems="data.blogItems" />
+      <blog-author :user="data.blog.user" :blogItems="data.blogItems" :view="data.blog.view" :thumb="data.blog.thumb" />
     </a-col>
   </a-row>
   <a-float-button-group shape="circle" :style="{ right: '94px', bottom: '24px' }">
@@ -23,16 +23,13 @@ import { reactive, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { getBlogDetailByIdAPI, getBlogItemAPI, giveThumbAPI } from '@/api/guest/blog.js'
-import { getUserDetailByIdAPI } from '@/api/guest/user.js'
-import { getTypeDetailByIdAPI } from '@/api/guest/archive.js'
+import { ANON_USER } from '@/constants/index.js'
 
 const router = useRouter()
 
 const data = reactive({
   disabled: false,
   blog: {},
-  user: {},
-  type: {},
   blogItems: {}
 })
 
@@ -49,28 +46,24 @@ const methods = reactive({
   getBlogDetailById: (id) => {
     getBlogDetailByIdAPI(id).then(response => {
       Object.assign(data.blog, response.data.blog)
-      methods.getUserDetailById(data.blog.userId)
-      methods.getBlogItem(data.blog.userId)
-      methods.getTypeDetailById(data.blog.typeId)
+      if (data.blog.user) {
+        methods.getBlogItem({"userId": data.blog.userId})
+      } else {
+        // 匿名赋值
+        data.blog.user = {
+          nickname: ANON_USER.nickname,
+          avatar: ANON_USER.avatar,
+          signature: ANON_USER.signature
+        }
+        methods.getBlogItem({"isAnon": true})
+      }
       // 修改页面标题
       window.document.title = data.blog.title
     })
   },
 
-  getUserDetailById: (id) => {
-    getUserDetailByIdAPI(id).then(response => {
-      Object.assign(data.user, response.data.user)
-    })
-  },
-
-  getTypeDetailById: (id) => {
-    getTypeDetailByIdAPI(id).then(response => {
-      Object.assign(data.type, response.data.type)
-    })
-  },
-
-  getBlogItem: (userId) => {
-    getBlogItemAPI({"userId": userId, "limit": 10, "sorter": "-createdTime"}).then(response => {
+  getBlogItem: (query) => {
+    getBlogItemAPI({...query, "limit": 10, "sorter": "-createdTime"}).then(response => {
       Object.assign(data.blogItems, response.data.blogItems)
     })
   },

@@ -2,8 +2,8 @@
   <a-card class="artical">
     <a-typography-title :level="2" class="title">{{ props.blog.title }}</a-typography-title>
     <div class="remark">
-      <UserOutlined /> {{ props.author }}
-      <TagOutlined /> {{ props.label }}
+      <UserOutlined /> {{ props.blog.user?.nickname }}
+      <TagOutlined /> {{ props.blog.type?.label }}
       <CalendarOutlined /> {{ methods.blogTimeFormat(props.blog.createdTime) }}
       <EyeOutlined /> {{ props.blog.view  }}
       <LikeOutlined /> {{ props.blog.thumb }}
@@ -27,8 +27,6 @@ import dayjs from 'dayjs'
 
 const props = defineProps({
   blog: Object,
-  author: String,
-  label: String
 })
 
 const methods = reactive({

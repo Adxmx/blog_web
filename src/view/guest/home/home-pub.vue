@@ -6,7 +6,7 @@
           <template #renderItem="{ item }">
             <a-list-item key="item.id">
               <template #actions>
-                <span><UserOutlined class="interval" />{{ item.user.nickname }}</span>
+                <span><UserOutlined class="interval" />{{ item.user ? item.user.nickname : ANON_USER.nickname }}</span>
                 <span><TagOutlined class="interval" />{{ item.type.label }}</span>
                 <span><EyeOutlined class="interval" />{{ item.view }}</span>
                 <span><LikeOutlined class="interval" />{{ item.thumb }}</span>
@@ -16,11 +16,14 @@
               <template #extra>
                 <img-action :width="'200px'" :height="'150px'" :action="true" :dimension="'width'" :url="item.cover" />
               </template>
-              <a-list-item-meta :description="item.description" style="height:112px;">
+              <a-list-item-meta style="height:112px;">
                 <template #title>
                   <router-link target='_blank' :to="{name: 'guest-blog', params: {id: item.id}}">{{ item.title }}</router-link>
                 </template>
-                <template #avatar><a-avatar :src="item.user.avatar" /></template>
+                <template #description>
+                  <p class="description">{{ item.description }}</p>
+                </template>
+                <template #avatar><a-avatar :src="item.user ? item.user.avatar : ANON_USER.avatar" /></template>
               </a-list-item-meta>
               {{ item.content }}
             </a-list-item>
@@ -41,6 +44,17 @@
     <a-col :span="6">
       <a-card title="Coding轨迹" class="trace bottom">
         <a-timeline mode="alternate">
+          <a-timeline-item position="left" color="green">
+            <template #dot><CheckCircleOutlined /></template>
+            <span class="coding">2024.11.18 上线前后端，隐藏匿名博客作者信息及查询，新增用户签名字段</span>
+          </a-timeline-item>
+          <a-timeline-item position="right">
+            <span class="coding">2024.11.17 解决background-image触发防盗链，博客标题长度过长排行标题换行问题，新增ICP备案跳转，优化一些CSS动作，添加匿名用户信息，博客列表描述信息展示限制最多三行</span>
+          </a-timeline-item>
+          <a-timeline-item position="left" color="green">
+            <template #dot><CheckCircleOutlined /></template>
+            <span class="coding">2024.11.15 上线前后端，完成线上配置，配置nginx，测试域名跳转，开始域名备案</span>
+          </a-timeline-item>
           <a-timeline-item position="right">
             <span class="coding">2024.11.14 完善一下前端博客详情页数据渲染，新增点赞交互功能，完善路由跳转，新增404页面</span>
           </a-timeline-item>
@@ -81,13 +95,9 @@
             <template #dot><EditOutlined /></template>
             <span class="coding">2024.06.19 发布第一篇博客</span>
           </a-timeline-item>
-          <a-timeline-item position="right" color="green">
-            <template #dot><CheckCircleOutlined /></template>
-            <span class="coding">2024.06.15 登录云服务器，安装前端依赖环境，上线前端项目</span>
-          </a-timeline-item>
           <a-timeline-item position="left" color="green">
             <template #dot><CheckCircleOutlined /></template>
-            <span class="coding">2024.06.13 登录云服务器，安装后端依赖环境，上线后端项目，解决开发、生产环境区分问题，部署后端服务</span>
+            <span class="coding">2024.06.15 登录云服务器，安装前后端依赖环境，首次上线前后端项目，解决开发、生产环境区分问题，部署后端服务</span>
           </a-timeline-item>
           <a-timeline-item position="right">
             <span class="coding">2024.05.31 前端登录页添加验证码输入及校验交互</span>
@@ -138,6 +148,8 @@
   import { getBlogListAPI } from '@/api/guest/blog.js'
   import { dateFormat } from '@/utils/helper.js'
 
+  import { ANON_USER } from '@/constants/index.js'
+
   const data = reactive({
     pagination: {
       total: 0,
@@ -180,6 +192,14 @@
   height: 585px;
   overflow: scroll;
   scrollbar-width: none;
+}
+
+.blog .description {
+  height: 66px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
 .blog span .interval {
