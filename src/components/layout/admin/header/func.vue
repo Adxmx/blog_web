@@ -16,7 +16,7 @@
 
     <a-dropdown class="user horizontal">
       <div class="ant-dropdown-link">
-        <a-avatar size="small" src="https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png" />
+        <a-avatar size="small" :src="store.state.user.avatar" />
         <span class="spacing"> {{ store.state.user.nickname }} </span> <DownOutlined />
       </div>
       <template #overlay>

@@ -14,9 +14,16 @@
       </a-form-item>
 
       <a-form-item label="分 类">
-        <a-select v-model:value="data.blogSettingsForm.typeId" placeholder="请 选 择 文 章 分 类" show-search :filter-option="methods.filterOption" @change="methods.typeChange">
-          <a-select-option v-for="item in data.types" :key="item.id" :value="item.id" :label="item.label">{{ item.label }}</a-select-option>
-        </a-select>
+        <a-row>
+          <a-col :span="23" :gutter="16">
+            <a-select v-model:value="data.blogSettingsForm.typeId" placeholder="请 选 择 文 章 分 类" show-search :filter-option="methods.filterOption" @change="methods.typeChange">
+              <a-select-option v-for="item in data.types" :key="item.id" :value="item.id" :label="item.label">{{ item.label }}</a-select-option>
+            </a-select>
+          </a-col>
+          <a-col class="flush" :span="1">
+            <SyncOutlined :spin="data.typesLoading" @click="methods.getTypeList" />
+          </a-col>
+        </a-row>
       </a-form-item>
 
       <a-form-item label="状 态">
@@ -25,7 +32,7 @@
 
       <a-form-item label="身 份">
         <a-radio-group v-model:value="data.blogSettingsForm.isAnon">
-          <a-radio :value="false">nickname</a-radio>
+          <a-radio :value="false">{{ store.state.user.nickname }}</a-radio>
           <a-radio :value="true">匿 名</a-radio>
         </a-radio-group>
       </a-form-item>
@@ -56,10 +63,13 @@
 </template>
 <script setup>
 import { reactive, watch, defineExpose, defineProps, onMounted } from 'vue'
+import { useStore } from 'vuex'
 import { message } from 'ant-design-vue'
 
 import { getTypeListAPI } from '@/api/admin/archive.js'
 import { fileUploadToGitRepo } from '@/utils/helper'
+
+const store = useStore()
 
 const props = defineProps({
   blogForm: Object
@@ -75,6 +85,7 @@ const data = reactive({
       span: 14,
     },
   },
+  typesLoading: false,
   types: [],
   blogSettingsForm: {
     title: props.blogForm.title,
@@ -104,8 +115,10 @@ const methods = reactive({
     data.blogSettingsForm.typeId = value
   },
   getTypeList: () => {
+    data.typesLoading = true
     getTypeListAPI({pageSize: 999}).then(response => {
       data.types = response.data.types
+      data.typesLoading = false
     }, error => {
       console.log(error)
     })
@@ -155,8 +168,16 @@ onMounted(
 
 </script>
 
-<style>
-.cover-upload  .ant-upload-select-picture-card {
+<style scoped>
+.flush {
+  text-align: right;
+  line-height: 30px;
+  font-size: 16px;
+  color: #82bc56;
+  cursor: pointer;
+}
+
+.cover-upload  ::v-deep .ant-upload-select-picture-card {
   width: 100% !important;
   height: 100% !important;
   min-height: 160px;
@@ -171,7 +192,7 @@ onMounted(
   margin: 60px;
 }
 
-.ant-upload-select-picture-card .ant-upload-text {
+::v-deep .ant-upload-select-picture-card .ant-upload-text {
   margin-top: 8px;
   color: #666;
 }

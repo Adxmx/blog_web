@@ -207,8 +207,8 @@ const methods = reactive({
       console.log(error)
     })
   },
-  getBlogList: () => {
-    getBlogListAPI().then(response => {
+  getBlogList: (params) => {
+    getBlogListAPI(params).then(response => {
       response.data.blogs.forEach((blog) => {
         if (blog.isPublished) {
           data.publishBlogs.push(blog)
@@ -242,7 +242,7 @@ const methods = reactive({
 
 onMounted(
   () => {
-    methods.getBlogList()
+    methods.getBlogList({page:1, pageSize: 999})
     methods.checkIsBlogId()
   }
 )

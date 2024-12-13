@@ -44,6 +44,10 @@
     <a-col :span="6">
       <a-card title="Coding轨迹" class="trace bottom">
         <a-timeline mode="alternate">
+          <a-timeline-item position="right" color="green">
+            <template #dot><CheckCircleOutlined /></template>
+            <span class="coding">2024.12.13 美化一下前台博客详情页正文内容样式，实现编辑页目录再刷新功能</span>
+          </a-timeline-item>
           <a-timeline-item position="left" color="green">
             <template #dot><CheckCircleOutlined /></template>
             <span class="coding">2024.11.18 上线前后端，隐藏匿名博客作者信息及查询，新增用户签名字段</span>

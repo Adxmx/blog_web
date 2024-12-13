@@ -2,6 +2,9 @@
   <a-row :gutter="16">
     <a-col :span="18">
       <a-card title="隐匿角落" class="content">
+        <template #extra>
+          <span class="soup">暂无匿名提交，先放一些非技术博客。</span>
+        </template>
         <a-row :gutter="4">
           <a-col :span="6" v-for="blogItem in data.firstFourBlogItems" :key="blogItem.id">
             <a-card hoverable style="text-align: center">
@@ -78,6 +81,11 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.soup {
+  font-size: 14px;
+  color: #999999;
+}
+
 .content {
   height: 600px;
 }

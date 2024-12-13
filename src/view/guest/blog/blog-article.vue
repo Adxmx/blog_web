@@ -79,6 +79,13 @@ const methods = reactive({
   margin: 12px auto;
 }
 
+.artical .content {
+  line-height: 28px;
+  letter-spacing: 2px;
+  font-family: serif;
+  font-size: 16px;
+}
+
 .ant-card {
   border-radius: 0px;
 }
