@@ -45,3 +45,8 @@ export const dateTimeFormat = (time) => {
 export const dateFormat = (time) => {
     return dayjs(time).format('YYYY-MM-DD')
 }
+
+// 过滤出带有封面的文章
+export const blogItemFilterIsCover = (blogItems) => {
+    return blogItems.filter(item => item.cover)
+}

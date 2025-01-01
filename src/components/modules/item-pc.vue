@@ -1,5 +1,5 @@
 <template>
-  <div class="item" v-for="blogItem in props.blogItems" :key="blogItem.id">
+  <div class="item" v-for="blogItem in blogItemFilterIsCover(props.blogItems)" :key="blogItem.id">
     <img-action class="box" :width="'96px'" :height="'68px'" :action="true" :dimension="'height'" :url="blogItem.cover" />
     <div class="desc">
       <router-link target='_blank' :to="{name: 'guest-blog', params: {id: blogItem.id}}"><h2>{{ blogItem.title }}</h2></router-link>
@@ -12,7 +12,7 @@
 import ImgAction from '@/components/modules/img-action.vue'
 
 import { defineProps } from 'vue'
-import { dateFormat } from '@/utils/helper.js'
+import { dateFormat, blogItemFilterIsCover } from '@/utils/helper.js'
 
 const props = defineProps({
   blogItems: Object

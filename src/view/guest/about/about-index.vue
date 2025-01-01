@@ -1,7 +1,7 @@
 <template>
   <a-row :gutter="16">
     <a-col :span="18">
-      <img-action :width="'100%'" :height="'600px'" :action="false" :dimension="'width'" :url="'https://unsplash.it/800/600?image=1005'" />
+      <img-action :width="'100%'" :height="'600px'" :action="false" :dimension="'width'" :url="'https://gitee.com/adxm/prod-image-repo/raw/master/Base/d0b610535679686d446f71d3cb227192.jpg'" />
     </a-col>
     <a-col :span="6">
       <a-card title="关于我">

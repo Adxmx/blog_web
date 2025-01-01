@@ -3,7 +3,7 @@
     <a-col :span="18">
       <a-card title="隐匿角落" class="content">
         <template #extra>
-          <span class="soup">暂无匿名提交，先放一些非技术博客。</span>
+          <span class="soup">暂时没有匿名博客，先放一些站长的非技术博客吧。</span>
         </template>
         <a-row :gutter="4">
           <a-col :span="6" v-for="blogItem in data.firstFourBlogItems" :key="blogItem.id">
@@ -48,6 +48,7 @@ import ItemPc from '@/components/modules/item-pc.vue'
 
 import { reactive, onMounted } from 'vue'
 import { getBlogItemAPI } from '@/api/guest/blog.js'
+import { blogItemFilterIsCover } from '@/utils/helper.js'
 
 const data = reactive({
   firstFourBlogItems: [],
@@ -58,8 +59,8 @@ const data = reactive({
 const methods = reactive({
   getBlogItem: (operate, params) => {
     getBlogItemAPI(params).then(response => {
-      console.log(operate)
-      const blogItems = response.data.blogItems
+      const blogItems = blogItemFilterIsCover(response.data.blogItems)
+      
       if (operate === "anon") {
         if (blogItems.length > 4) {
           data.firstFourBlogItems = blogItems.slice(0, 4)

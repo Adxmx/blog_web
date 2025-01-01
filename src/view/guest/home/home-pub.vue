@@ -13,7 +13,7 @@
                 <span><CommentOutlined class="interval" />0</span>
                 <span><CalendarOutlined class="interval" />{{dateFormat(item.createdTime)}}</span>
               </template>
-              <template #extra>
+              <template #extra v-if="item.cover">
                 <img-action :width="'200px'" :height="'150px'" :action="true" :dimension="'width'" :url="item.cover" />
               </template>
               <a-list-item-meta style="height:112px;">

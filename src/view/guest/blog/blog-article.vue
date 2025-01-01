@@ -10,8 +10,11 @@
       <CommentOutlined /> 0
     </div>
     <a-divider class="divider" />
-    <img-action :width="'100%'" :height="'480px'" :action="false" :dimension="'height'" :url="props.blog.cover" />
-    <a-divider class="divider" />
+    <!-- 博客无封面则不加载封面和下面的分割线 -->
+    <template v-if="props.blog.cover">
+      <img-action :width="'100%'" :height="'480px'" :action="false" :dimension="'height'" :url="props.blog.cover" />
+      <a-divider class="divider" />
+    </template>
     <p class="content" v-html="methods.blogContentFormat(props.blog)"></p>
   </a-card>
 </template>
